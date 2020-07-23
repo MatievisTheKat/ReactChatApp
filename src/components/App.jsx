@@ -14,6 +14,18 @@ export default class App extends React.Component {
     };
   }
 
+  scrollToBottom() {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   appendMessage(msg) {
     const joined = this.state.convo.concat(msg);
     this.setState({ convo: joined });
@@ -37,7 +49,7 @@ export default class App extends React.Component {
       this.setState({ message: "" });
 
       this.setState({ botTyping: true });
-      Axios.post("http://localhost:3001/response", {
+      Axios.post("https://cb.matthewis.online/response", {
         conversation: this.state.convo,
         message: content
       }).then((res) => {
@@ -62,26 +74,33 @@ export default class App extends React.Component {
             </>
           ))}
         </div>
+        <div
+          style={{ float: "left", clear: "both" }}
+          ref={(el) => {
+            this.messagesEnd = el;
+          }}></div>
 
         <div>
           {" "}
           <em>{this.state.botTyping ? "Typing response..." : ""}</em>
         </div>
 
-        <div className="row">
-          <input
-            className="form-control w-75"
-            type="text"
-            name="message"
-            id="message"
-            placeholder="Type your message here"
-            onKeyDown={(evnt) => (evnt.keyCode === 13 ? this.sendMessage("You", this.state.message) : null)}
-            onChange={(evnt) => this.onInputChange(evnt)}
-            value={this.state.message}
-          />
-          <button type="submit" className="btn-outline-primary w-25" onClick={() => this.sendMessage("You", this.state.message)}>
-            Send
-          </button>
+        <div className="row bg-dark chat-input">
+          <div className="row container center">
+            <input
+              className="form-control w-75"
+              type="text"
+              name="message"
+              id="message"
+              placeholder="Type your message here"
+              onKeyDown={(evnt) => (evnt.keyCode === 13 ? this.sendMessage("You", this.state.message) : null)}
+              onChange={(evnt) => this.onInputChange(evnt)}
+              value={this.state.message}
+            />
+            <button type="submit" className="btn-outline-primary w-25" onClick={() => this.sendMessage("You", this.state.message)}>
+              Send
+            </button>
+          </div>
         </div>
       </div>
     );
