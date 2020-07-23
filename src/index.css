@@ -5,3 +5,8 @@
 .center {
   text-align: center;
 }
+
+.chatbox {
+  max-height: 100%;
+  overflow: auto;
+}
